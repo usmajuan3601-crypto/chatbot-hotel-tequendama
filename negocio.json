@@ -1,0 +1,15 @@
+{
+  "hotel": "Hotel Tequendama",
+  "habitaciones": [
+    {"tipo": "Sencilla", "precio": 120000, "capacidad": 1},
+    {"tipo": "Doble", "precio": 200000, "capacidad": 2},
+    {"tipo": "Suite", "precio": 350000, "capacidad": 4}
+  ],
+  "servicios": {
+    "masaje": {"nombre": "Masaje relajante", "precio_cop": 120000, "duracion_minutos": 60},
+    "spa": {"nombre": "Circuito de spa", "precio_cop": 180000, "duracion_minutos": 90},
+    "cena_romantica": {"nombre": "Cena romántica", "precio_cop": 250000, "duracion_minutos": 120},
+    "sala_reuniones": {"nombre": "Sala de reuniones", "precio_cop": 300000, "duracion_minutos": 120},
+    "tour_ciudad": {"nombre": "Tour por la ciudad", "precio_cop": 90000, "duracion_minutos": 180}
+  }
+}
