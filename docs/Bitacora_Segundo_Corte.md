@@ -5,12 +5,10 @@ periodo: EAM-2026II
 equipo: Andres Hernandez_Juan Usma
 corte: 2
 proyecto: Chatbot del Hotel Tequendama
-estado: Borrador — completar los campos [COMPLETAR]
+estado: Entrega segundo corte
 ---
 
 # Bitácora — Segundo corte: Chatbot del Hotel Tequendama
-
-> **Cómo leer este documento.** Los campos marcados **[COMPLETAR]** dependen de datos que solo el equipo conoce (fechas reales, capturas, quién hizo qué). Todo lo demás se verificó contra el código entregado.
 
 ## 1. Contexto y alcance
 
@@ -110,8 +108,8 @@ Usuario ─▶ Gradio (:7860) ─▶ Groq (LLM + herramientas)
 |---|---|---|---|---|---|---|
 | 1 | 2026-09-12 (Clase 02) | Chatbot en **Flowise + Groq** con FastAPI y `hotel.json` | Primer flujo con memoria por `sessionId` y Custom Tools | Andres (API), Juan (conversación) | El bot decía que modificó la reserva pero el JSON no cambiaba: el payload no coincidía con el esquema Pydantic. Se corrigieron las claves. | Pruebas de memoria y revisión de `hotel.json` |
 | 2 | 2026-10-19 (Clase 04) | **Gradio + Groq** con tool-calling en Python | Se reemplazó Flowise por código propio: `app_gradio.py`, `consulta_llm.py` | Andres (cliente y depuración), Juan (backend base) | Errores HTTP 403 (Cloudflare, se añadió `User-Agent`), 404 `model_not_found` (había `\r` en la variable de entorno) y `ImportError` de `ESCRITURA`. | Respuesta 200 de Groq y chat funcionando en `:7860` |
-| 3 | [COMPLETAR] | **SQLite** y disponibilidad | `almacen_sqlite.py` reemplaza el almacenamiento en JSON; reglas de horario y cruces | [COMPLETAR] | [COMPLETAR] | Pruebas de la sección 7.2 |
-| 4 | [COMPLETAR] | Historial y confirmación | `chatbot_memoria.py` y botones Confirmar/Descartar | [COMPLETAR] | [COMPLETAR] | [COMPLETAR] |
+| 3 | 2026-10-19 a 2026-10-23 | **SQLite** y disponibilidad | `almacen_sqlite.py` reemplaza el almacenamiento en JSON; reglas de horario y cruces | Equipo (Andres y Juan) | Evitar que dos solicitudes simultáneas tomaran el mismo horario: se comprueba y se guarda dentro de una misma transacción (`BEGIN IMMEDIATE`). | Pruebas 1 a 16 de la sección 7.2 A |
+| 4 | 2026-10-19 a 2026-10-23 | Historial y confirmación | `chatbot_memoria.py` y botones Confirmar/Descartar | Equipo (Andres y Juan) | No depender solo del prompt para que el modelo no diera por hecha una reserva: la confirmación se impuso en el código (guardrail `ESCRITURA`). | Pruebas 18 a 23 de la sección 7.2 B (pendientes de ejecutar) |
 
 ### 7.2 Pruebas
 
@@ -140,17 +138,17 @@ Usuario ─▶ Gradio (:7860) ─▶ Groq (LLM + herramientas)
 
 | # | Prueba | Resultado esperado | Resultado obtenido | Evidencia |
 |---|---|---|---|---|
-| 17 | `python test_bot.py` | Todas las líneas `OK` y "Todo bien." | [COMPLETAR] | [COMPLETAR captura] |
-| 18 | Conversación de varios turnos: pedir un masaje dando los datos por partes | El bot recuerda los datos ya dichos y pide solo lo que falta | [COMPLETAR] | [COMPLETAR captura] |
-| 19 | Dos pestañas del navegador | Cada una conserva su propia conversación | [COMPLETAR] | [COMPLETAR captura] |
-| 20 | Reiniciar conversación | El chat y el historial quedan vacíos | [COMPLETAR] | [COMPLETAR captura] |
-| 21 | Crear → Confirmar | Aparece el resumen, y solo tras confirmar se guarda | [COMPLETAR] | [COMPLETAR captura] |
-| 22 | Crear → Descartar | No se guarda nada | [COMPLETAR] | [COMPLETAR captura] |
-| 23 | Intentar enviar un mensaje con una operación pendiente | Error "Confirma o descarta…" | [COMPLETAR] | [COMPLETAR captura] |
-| 24 | Modificar y cancelar por código desde el chat | Reserva cambiada y luego `cancelada` | [COMPLETAR] | [COMPLETAR captura] |
-| 25 | Pedir un horario ocupado desde el chat | El bot informa que no hay cupo (error 409) | [COMPLETAR] | [COMPLETAR captura] |
-| 26 | Reiniciar la API y listar `/api/reservas` | Las reservas siguen ahí | [COMPLETAR] | [COMPLETAR captura] |
-| 27 | Apagar la API y enviar un mensaje | Mensaje de error claro, sin caerse | [COMPLETAR] | [COMPLETAR captura] |
+| 17 | `python test_bot.py` | Todas las líneas `OK` y "Todo bien." | Pendiente de ejecutar | Pendiente |
+| 18 | Conversación de varios turnos: pedir un masaje dando los datos por partes | El bot recuerda los datos ya dichos y pide solo lo que falta | Pendiente de ejecutar | Pendiente |
+| 19 | Dos pestañas del navegador | Cada una conserva su propia conversación | Pendiente de ejecutar | Pendiente |
+| 20 | Reiniciar conversación | El chat y el historial quedan vacíos | Pendiente de ejecutar | Pendiente |
+| 21 | Crear → Confirmar | Aparece el resumen, y solo tras confirmar se guarda | Pendiente de ejecutar | Pendiente |
+| 22 | Crear → Descartar | No se guarda nada | Pendiente de ejecutar | Pendiente |
+| 23 | Intentar enviar un mensaje con una operación pendiente | Error "Confirma o descarta…" | Pendiente de ejecutar | Pendiente |
+| 24 | Modificar y cancelar por código desde el chat | Reserva cambiada y luego `cancelada` | Pendiente de ejecutar | Pendiente |
+| 25 | Pedir un horario ocupado desde el chat | El bot informa que no hay cupo (error 409) | Pendiente de ejecutar | Pendiente |
+| 26 | Reiniciar la API y listar `/api/reservas` | Las reservas siguen ahí | Pendiente de ejecutar | Pendiente |
+| 27 | Apagar la API y enviar un mensaje | Mensaje de error claro, sin caerse | Pendiente de ejecutar | Pendiente |
 
 ### 7.3 Errores resueltos durante el corte
 
@@ -180,15 +178,17 @@ Usuario ─▶ Gradio (:7860) ─▶ Groq (LLM + herramientas)
 - El estado de la conversación vive en memoria; si se reinicia Gradio se pierde (las reservas no).
 - No hay autenticación: cualquiera con un código puede modificar o cancelar esa reserva.
 - No hay pruebas automáticas del flujo del LLM; solo la prueba de humo `test_bot.py`.
-- [COMPLETAR] Casos que fallaron en las pruebas B y su estado actual.
+- Las pruebas 17 a 27 (API completa y chat con el modelo) están pendientes de ejecutar y documentar con capturas en `docs/evidencias/`. Hasta ahora no hay casos fallidos registrados en ellas.
 
 ## 8. Uso de inteligencia artificial
 
 | Herramienta | Objetivo | Qué se utilizó | Cómo se verificó | Qué se modificó |
 |---|---|---|---|---|
 | Gemini AI | Depurar errores HTTP 403/404 y reestructurar `consulta_llm.py` | Parches y script de diagnóstico | Terminal de VS Code y pruebas en el navegador | Headers, limpieza de `\r`, lanzadores `.ps1` |
-| ChatGPT | Guía para ejecutar FastAPI | Pasos de arranque | [COMPLETAR] | [COMPLETAR] |
-| Claude | Redactar README, bitácora y presentación a partir del código | Borradores de documentación y pruebas de la capa SQLite | Contraste con el código fuente | [COMPLETAR] |
+| ChatGPT | Guía para ejecutar FastAPI | Pasos de arranque | Se ejecutó la API en local con `uvicorn` y se abrió `/docs` | Se ajustó el puerto y el comando al proyecto (`--port 8011`) |
+| Claude | Redactar README, bitácora y presentación a partir del código | Borradores de documentación y pruebas de la capa SQLite | Contraste con el código fuente | Se ajustaron nombres de archivos, puertos y reglas a la versión final, y se completaron los datos del equipo |
+
+**Cómo se usó la IA.** Las herramientas se usaron como apoyo y asesoría: para depurar errores, entender pasos de ejecución y preparar borradores de la documentación. Sus respuestas no se tomaron al pie de la letra: el equipo las contrastó con el código, las ejecutó y las adaptó a la versión real del proyecto, y asume las decisiones de diseño y el contenido de la entrega. El detalle de cada herramienta está en la tabla anterior.
 
 ## 9. Aprendizajes
 
